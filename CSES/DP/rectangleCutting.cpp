@@ -14,6 +14,10 @@ using namespace std;
 #define pb push_back
 #define srt(v) sort(v.begin(), v.end())
 #define all(v) begin(v), end(v)
+#define bitN(n, len) bitset<len>(n).to_string()
+#define inputArr(i, arr) \
+    for (int &i : arr)   \
+        cin >> i;
 
 time_t Begin;
 
@@ -36,27 +40,37 @@ void timeTaken()
 #endif
 }
 
-int dp[5050][5050];
+int minCut(int n, int m, vector<vector<int>> &dp)
+{
+    if (n == m)
+        return 0;
+
+    if (dp[n][m] != -1)
+        return dp[n][m];
+
+    if (m < dp.size() && n < dp[0].size() && dp[m][n] != -1)
+        return dp[m][n];
+
+    int res = inf;
+    for (int i = 1; i < n; i++)
+        res = min(res, minCut(i, m, dp) + minCut(n - i, m, dp));
+
+    for (int i = 1; i < m; i++)
+        res = min(res, minCut(n, i, dp) + minCut(n, m - i, dp));
+
+    return dp[n][m] = res + 1;
+}
 
 int32_t main()
 {
     init();
     //--------------------
-    /*******************************
-    ************PENDING*************
-    *******************************/
     int a, b;
     cin >> a >> b;
-    int res = 0;
-    while (a != b)
-    {
-        if (a > b)
-            a -= b;
-        else
-            b -= a;
-        res++;
-    }
-    cout << res;
+
+    vector<vector<int>> dp(a + 1, vector<int>(b + 1, -1));
+
+    cout << minCut(a, b, dp);
     //---------------------------
     timeTaken();
     return 0;
