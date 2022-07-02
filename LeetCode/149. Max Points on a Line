@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int maxPoints(vector<vector<int>>& points) {
+        map<string, int> mp;
+        int n = points.size(), res = 1;
+        
+        for(int i=0; i<n; i++)
+        {
+            for(int j=i+1; j<n; j++)
+            {
+                if(i==j)
+                    continue;
+                int x1, y1, x2, y2;
+                x1=points[i][0], y1=points[i][1], x2=points[j][0], y2=points[j][1];
+                int yy = y2 - y1, xx = x2-x1, gcd1 = __gcd(yy,xx);
+                int cc = x2*y1 - x1*y2, gcd2 = __gcd(cc, xx);
+                
+                string key = to_string(gcd1!=0?xx/gcd1:xx) + "#" + to_string(gcd1!=0?yy/gcd1:yy) + "#" + to_string(gcd2!=0?xx/gcd2:xx) + "#" + to_string(gcd2!=0?cc/gcd2:cc);
+                
+                mp[key]++;
+                // cout<<key<<" "<<mp[key]<<" "<<x1<<" "<<y1<<" "<<x2<<" "<<y2<<" "<<i<<" "<<j<<endl;
+                res = max(res, mp[key]+1);
+            }
+            mp.clear();
+        }
+        return res;
+    }
+};
